@@ -32,10 +32,23 @@ RSpec.describe Owner, :type => :model do
     let!(:dogs) { FactoryGirl.create_list(:dog, 10) }
     let(:dog) { FactoryGirl.create(:dog) }
     let(:cat) { Cat.create(:name => "snuggles", :desc => "furry") }
-    let(:owner) { Owner.create(:name => "Bob the builder") }
+    let(:owner) { Owner.create(:name => "Bob the builder", :age => 21) }
 
     it "should be able to fork money for nothing" do
       expect(owner).to respond_to :fork_money_for_useless_catbed
+    end
+
+    it "check his age" do
+      expect(owner.age).to be >= 10
+      expect(owner.age).to be < 100
+      expect(owner.age).to be_within(10).of(29)
+      
+      expect([21, 23, 25]).to include(owner.age)
+      expect([21, 23, 25]).to match_array([25, 21, 23])
+
+      expect(owner.name).to start_with "s"
+      expect(owner.name).to start_with("s").and end_with('r')
+      expect([owner.name]).to contain_exactly(a_string_starting_with("s"))
     end
 
     describe "should be able to pet and animal" do
