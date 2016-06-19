@@ -20,8 +20,9 @@ class Owner < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :email
 
-  def pet_animal(animal)
-    if likes_animal?(animal)
+  def pet_animal(animal, dummy = 1)
+    multiply(dummy)
+    if likes_animal?(animal, dummy)      
       puts "arent you gorgeous *pet-pet*"
       :petted
     else
@@ -40,7 +41,7 @@ class Owner < ActiveRecord::Base
     end
   end  
 
-  def likes_animal?(animal)
+  def likes_animal?(animal, dummy = 2)
     animal.is_a? Cat
   end
 
@@ -50,6 +51,14 @@ class Owner < ActiveRecord::Base
 
   def adopt_cat(cat)
     self.cats << cat
+  end
+
+  def multiply(x)
+    x * one
+  end
+
+  def one
+    1
   end
 
 end
