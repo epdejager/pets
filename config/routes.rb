@@ -1,13 +1,5 @@
 Pets::Application.routes.draw do
-  get "owners/create"
-
-  get "owners/update"
-
-  get "owners/show"
-
-  get "owners/delete"
-
-  get "owners/index"
+  resources :owners
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

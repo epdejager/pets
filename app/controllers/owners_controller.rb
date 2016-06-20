@@ -5,9 +5,10 @@ class OwnersController < ApplicationController
   def create
     @owner = Owner.new(params[:owner])
 
-    respond_to do |format|
-      format.html
-      format.json { render json: @owner.to_json }
+    if @owner.save
+      redirect_to @owner
+    else
+      render :new
     end
   end
 
@@ -15,9 +16,18 @@ class OwnersController < ApplicationController
   end
 
   def show
-    redirect_to owners_index_path
+    @owner = Owner.find(params[:id])
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @owner.to_json }
+    end    
   end
 
-  def delete
+  def destroy
+    @owner = Owner.find(params[:id])
+    @owner.destroy
+
+    redirect_to owners_path
   end
 end
