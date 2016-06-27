@@ -22,7 +22,7 @@ class Owner < ActiveRecord::Base
 
   def pet_animal(animal, dummy = 1)
     multiply(dummy)
-    if likes_animal?(animal, dummy)      
+    if likes_animal?(animal, dummy)
       puts "arent you gorgeous *pet-pet*"
       :petted
     else

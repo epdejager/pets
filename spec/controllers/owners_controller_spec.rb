@@ -13,7 +13,7 @@ RSpec.describe OwnersController, :type => :controller do
     end
 
     describe "with invalid params" do
-      let!(:owner) { FactoryGirl.create(:owner, :email => "bob@example.com") }      
+      let!(:owner) { FactoryGirl.create(:owner, :email => "bob@example.com") }
 
       it "assigns a newly created owner unsaved" do
         allow_any_instance_of(Owner).to receive(:save).and_return(false)
@@ -35,7 +35,7 @@ RSpec.describe OwnersController, :type => :controller do
     [:html, :json, :csv].each do |format|
       it "should respond to show with format #{format}" do
         get :show, id: owner.id, format: format
-        expect(assigns[:owner]).to eq owner  
+        expect(assigns[:owner]).to eq owner
       end
     end
   end

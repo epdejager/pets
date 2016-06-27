@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Owner, :type => :model do
   before(:all) do
-    10.times do 
+    10.times do
       Bird.create()
     end
   end
@@ -15,7 +15,7 @@ RSpec.describe Owner, :type => :model do
 	end
 
   describe "associations" do
-    it { is_expected.to have_many :dogs } 
+    it { is_expected.to have_many :dogs }
   end
 
   describe "validations" do
@@ -34,6 +34,8 @@ RSpec.describe Owner, :type => :model do
     let(:dog) { FactoryGirl.create(:dog) }
     let(:cat) { Cat.create(:name => "snuggles", :desc => "furry") }
     let(:owner) { Owner.create(:name => "Bob the builder", :age => 21) }
+    let(:owner_1) { FactoryGirl.create(owner, :name => "Bob the builder", :age => 21) }
+    let(:owner_with_dogs) { FactoryGirl.create(:owner_with_dogs, :age => 21, :dog_count => 4) }
 
     describe "matcher examples" do
       it "responding to methods" do
@@ -44,7 +46,7 @@ RSpec.describe Owner, :type => :model do
         expect(owner.age).to be >= 10
         expect(owner.age).to be < 100
         expect(owner.age).to be_within(10).of(29)
-        
+
         # arrays
         expect([21, 23, 25]).to include(owner.age)
         expect([21, 23, 25]).to match_array([25, 21, 23])
@@ -65,15 +67,15 @@ RSpec.describe Owner, :type => :model do
     end
 
     describe "mocking (or stubbing) methods" do
+      it "using allow - the same but without the checking" do
+        allow(owner).to receive(:likes_animal?).and_return true
+        expect(owner.pet_animal(dog)).to eq :petted
+      end
+
       it "basic expectation" do
         expect(owner).to receive(:likes_animal?)
         owner.pet_animal(cat)
         # expect(owner.pet_animal(cat)).to eq :petted # this no longer works without and_return
-      end
-
-      it "mocking can ruin your life - does not actually execute method" do
-        expect(owner).to receive(:one)
-        expect(owner.multiply(10)).to eq 10        
       end
 
       it "specifying a return value" do
@@ -81,10 +83,15 @@ RSpec.describe Owner, :type => :model do
         expect(owner.pet_animal(dog)).to eq :ignored
       end
 
+      # it "mocking can ruin your life - does not actually execute method" do
+      #   expect(owner).to receive(:one)
+      #   expect(owner.multiply(10)).to eq 10
+      # end
+
       it "using any_instance_of" do
         expect_any_instance_of(Owner).to receive(:likes_animal?).and_return false
-        expect(owner.pet_animal(dog)).to eq :ignored        
-      end      
+        expect(owner.pet_animal(dog)).to eq :ignored
+      end
 
       describe "specifying arguments" do
         it "basic argument" do
@@ -104,13 +111,8 @@ RSpec.describe Owner, :type => :model do
         end
       end
 
-      it "using allow - the same but without the checking" do
-        allow(owner).to receive(:likes_animal?).and_return true
-        expect(owner.pet_animal(dog)).to eq :petted
-      end
-
       it "checking after the fact" do
-        allow(owner).to receive(:likes_animal?) # this is required        
+        allow(owner).to receive(:likes_animal?) # this is required
         owner.pet_animal(cat)
         expect(owner).to have_received(:likes_animal?).exactly(1).times
       end
@@ -118,7 +120,7 @@ RSpec.describe Owner, :type => :model do
       it "ordering expectations" do
         expect(owner).to receive(:multiply).ordered
         expect(owner).to receive(:likes_animal?).ordered
-        owner.pet_animal(cat)     
+        owner.pet_animal(cat)
       end
     end
 
@@ -133,16 +135,16 @@ RSpec.describe Owner, :type => :model do
         expect{
           1 / 0
         }.to raise_error # to_not
-      end      
-    end    
+      end
+    end
 
     describe "metaprogram to produce lots of specs" do
-      [:pet, :feed].each do |action|        
+      [:pet, :feed].each do |action|
         it "when its a dog, should ignore it when asked to #{action}" do
           expect(owner.send("#{action}_animal", dog)).to eq :ignored
         end
       end
-    end    
+    end
   end
 
   # nb

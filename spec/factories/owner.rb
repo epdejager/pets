@@ -2,9 +2,12 @@ FactoryGirl.define do
   factory :owner do
     name "fred"
     age 29
+    # description { name + age }
     sequence(:email) { |n| "mr_#{n}@example.com" }
 
     factory :owner_with_five_dogs do
+      name "many_dogs fred"
+
       after(:create) do |owner, evaluator|
         create_list(:dog, 5, owner: user)
       end
@@ -14,7 +17,7 @@ FactoryGirl.define do
        transient do 
          dog_count 3
        end
-     
+
      # FactoryGirl.create()
       after(:create) do |owner, evaluator|
         create_list(:dog, evaluator.dog_count, owner: user)
